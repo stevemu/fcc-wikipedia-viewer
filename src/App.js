@@ -52,14 +52,15 @@ class App extends Component {
 
     componentDidMount() {
         axios.get("https://en.wikipedia.org/w/api.php?origin=*&action=query&format=json&list=search&srsearch=bb&srprop=snippet").then((res) => {
-            // console.log(res.data.query.search);
+            console.log(res.data.query.search);
             const articles = res.data.query.search.map((search) => {
                 const text = htmlToText.fromString(search.snippet);
 
                 return {
                     id: search.pageid,
                     title: search.title,
-                    text
+                    text,
+                    link: "https://en.wikipedia.org/?curid=" + search.pageid
                 }
             });
 

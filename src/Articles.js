@@ -19,7 +19,10 @@ const ArticleContainer = styled.div`
 
   &:hover {
     box-shadow: -5px 0px 0px 0px darkorange;
+    cursor: crosshair;
   }
+  
+  
 `;
 
 const Title = styled.div`
@@ -31,9 +34,11 @@ const Text = styled.div`
   font-size: 16px;
 `;
 
-const Article = ({title, text}) => {
+const Article = ({title, text, link}) => {
     return (
-        <ArticleContainer>
+        <ArticleContainer onClick={() => {
+            window.open(link);
+        }}>
             <Title>{title}</Title>
             <Text>{text}</Text>
         </ArticleContainer>
@@ -83,7 +88,7 @@ class Articles extends Component {
         return (
             <ArticlesContainer style={{paddingTop: this.state.paddingTop, opacity: this.state.opacity}}>
                 {articles.map((article) => {
-                    return <Article key={article.id} title={article.title} text={article.text}/>
+                    return <Article key={article.id} title={article.title} text={article.text} link={article.link}/>
                 })}
             </ArticlesContainer>
         );
