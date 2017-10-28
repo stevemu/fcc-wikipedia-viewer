@@ -73,6 +73,7 @@ class AnimatedInput extends Component {
     // for testing
     componentDidMount() {
         this.showInput();
+        this.props.onEnterPress();
     }
 
     showInput = (e) => {
