@@ -20,6 +20,7 @@ const Link = styled.a`
   
   &:link, &:visited {
     color: white;
+    text-decoration: none;
   }
 `;
 
@@ -27,14 +28,18 @@ const Link = styled.a`
 class App extends Component {
 
     state = {
+        showTip: true
     };
 
     render() {
         return (
             <Container>
-                <Link>Click here for a random article</Link>
-                <AnimatedInput/>
-                <Link>Click icon to search</Link>
+                <Link href="https://en.wikipedia.org/wiki/Special:Random" target="_blank">Click here for a random article</Link>
+                <AnimatedInput onEnterPress={() => {
+                  this.setState({showTip: false});
+                }}/>
+                {this.state.showTip && <Link>Click icon to search</Link>}
+
             </Container>
         );
     }

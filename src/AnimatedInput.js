@@ -44,10 +44,10 @@ const InputAreaContainer = styled.div`
   position: relative;
 `;
 
-const InputArea = ({style, onClose}) => {
+const InputArea = ({style, onClose, onEnterPress}) => {
     return (
         <InputAreaContainer>
-            <Input style={style}/>
+            <Input style={style} onKeyPress={onEnterPress}/>
             <CloseButton onClick={onClose} style={{opacity: style.opacity}}>close</CloseButton>
         </InputAreaContainer>
     )
@@ -70,8 +70,13 @@ class AnimatedInput extends Component {
         iconOpacity: 1
     };
 
+    // for testing
+    componentDidMount() {
+        this.showInput();
+    }
+
     showInput = (e) => {
-        e.preventDefault();
+        if (e) e.preventDefault();
         this.setState({showSearchInput: true});
 
         setTimeout(() => {
@@ -95,6 +100,7 @@ class AnimatedInput extends Component {
                 <InputArea
                     style={{width: this.state.inputWidth, opacity: this.state.inputOpacity}}
                     onClose={this.hideInput}
+                    onEnterPress={this.props.onEnterPress}
                 />}
                 {!this.state.showSearchInput &&
                 <SearchIcon
