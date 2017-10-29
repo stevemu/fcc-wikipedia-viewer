@@ -7,7 +7,6 @@ const ArticlesContainer = styled.div`
   justify-content: flex-start;
   padding: 0 10%;
   padding-top: 100px;
-  transition: padding-top 1s ease-in-out, opacity 1s ease-in-out;
 `;
 
 const ArticleContainer = styled.div`
@@ -52,24 +51,32 @@ class Articles extends Component {
 
         this.state = {
             paddingTop: "50px",
-            opacity: 0
+            opacity: 0,
+            transition: "padding-top 1s ease-in-out, opacity 1s ease-in-out"
         }
 
     }
 
     componentWillReceiveProps({articles}) {
         if (articles && articles.length > 0) {
+
             this.showAfterDelay();
         } else {
             this.hide();
         }
     }
 
-    componentDidMount() {
-        this.showAfterDelay();
-    }
+    addTransition = () => {
+        this.setState({transition: "padding-top 1s ease-in-out, opacity 1s ease-in-out"});
+    };
+
+    // componentDidMount() {
+    //     this.showAfterDelay();
+    // }
 
     showAfterDelay() {
+        this.addTransition();
+
         setTimeout(() => {
             this.show();
         }, 1000);
@@ -80,13 +87,13 @@ class Articles extends Component {
     }
 
     hide() {
-        this.setState({paddingTop: "50px", opacity: 0});
+        this.setState({transition: "none", paddingTop: "50px", opacity: 0});
     }
 
     render() {
         const {articles} = this.props;
         return (
-            <ArticlesContainer style={{paddingTop: this.state.paddingTop, opacity: this.state.opacity}}>
+            <ArticlesContainer style={{paddingTop: this.state.paddingTop, opacity: this.state.opacity, transition: this.state.transition}}>
                 {articles.map((article) => {
                     return <Article key={article.id} title={article.title} text={article.text} link={article.link}/>
                 })}

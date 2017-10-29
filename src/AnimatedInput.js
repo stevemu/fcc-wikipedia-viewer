@@ -44,10 +44,10 @@ const InputAreaContainer = styled.div`
   position: relative;
 `;
 
-const InputArea = ({style, onClose, onEnterPress}) => {
+const InputArea = ({style, onClose, onKeyPress, onChange}) => {
     return (
         <InputAreaContainer>
-            <Input style={style} onKeyPress={onEnterPress}/>
+            <Input style={style} onKeyDown={onKeyPress} onChange={onChange}/>
             <CloseButton onClick={onClose} style={{opacity: style.opacity}}>close</CloseButton>
         </InputAreaContainer>
     )
@@ -63,18 +63,23 @@ const SearchIcon = styled(Search)`
 
 class AnimatedInput extends Component {
 
+    static defaultProps = {
+        close: () => {}
+    };
+
     state = {
         showSearchInput: false,
         inputWidth: "0px",
         inputOpacity: 0,
-        iconOpacity: 1
+        iconOpacity: 1,
+        input: ""
     };
 
     // for testing
-    componentDidMount() {
-        this.showInput();
-        this.props.onEnterPress();
-    }
+    // componentDidMount() {
+    //     this.showInput();
+    //     this.props.onEnterPress();
+    // }
 
     showInput = (e) => {
         if (e) e.preventDefault();
@@ -100,8 +105,19 @@ class AnimatedInput extends Component {
                 {this.state.showSearchInput &&
                 <InputArea
                     style={{width: this.state.inputWidth, opacity: this.state.inputOpacity}}
-                    onClose={this.hideInput}
-                    onEnterPress={this.props.onEnterPress}
+                    onClose={(e) => {
+                        this.hideInput(e);
+                        this.props.close();
+                    }}
+                    onKeyPress={(e) => {
+                        if (e.keyCode === 13) {
+                            this.props.onEnter(this.state.input);
+                        }
+
+                    }}
+                    onChange={(e) => {
+                      this.setState({input: e.target.value})
+                    }}
                 />}
                 {!this.state.showSearchInput &&
                 <SearchIcon

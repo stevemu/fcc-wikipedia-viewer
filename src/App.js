@@ -13,10 +13,10 @@ const Container = styled.div`
   flex-direction: column;
   min-height: 100vh;
   max-height: 100%;
-  padding-bottom: 50px;
-  justify-content: flex-start; // testing
   align-items: center;
-  padding-top: 30px; //testing
+  padding-bottom: 30px;
+  justify-content: flex-start;
+  transition: padding-top .6s ease-in-out;
 `;
 
 const Link = styled.a`
@@ -47,12 +47,15 @@ class App extends Component {
 
     state = {
         showTip: true,
-        articles: []
+        articles: [],
+        paddingTop: "180px"
     };
 
-    componentDidMount() {
-        axios.get("https://en.wikipedia.org/w/api.php?origin=*&action=query&format=json&list=search&srsearch=bb&srprop=snippet").then((res) => {
-            console.log(res.data.query.search);
+    requestWithTerm(term) {
+        this.setState({articles: []});
+        axios.get(`https://en.wikipedia.org/w/api.php?origin=*&action=query&format=json&list=search&srsearch=${term}&srprop=snippet`).then((res) => {
+            if (res.data.error) return;
+
             const articles = res.data.query.search.map((search) => {
                 const text = htmlToText.fromString(search.snippet);
 
@@ -70,12 +73,19 @@ class App extends Component {
 
     render() {
         return (
-            <Container>
+            <Container style={{paddingTop: this.state.paddingTop}}>
                 <Link href="https://en.wikipedia.org/wiki/Special:Random" target="_blank">Click here for a random
                     article</Link>
-                <AnimatedInput onEnterPress={() => {
-                    this.setState({showTip: false});
-                }}/>
+                <AnimatedInput
+                    onEnter={(term) => {
+                        this.setState({showTip: false, paddingTop: "30px"});
+                        this.requestWithTerm(term);
+                    }}
+                    close={() => {
+                        this.setState({paddingTop: "180px"});
+                        this.setState({articles: [], showTip: true});
+                    }}
+                />
                 {this.state.showTip && <Link>Click icon to search</Link>}
                 <Articles articles={this.state.articles}/>
             </Container>
